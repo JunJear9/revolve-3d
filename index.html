@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Revolve-3D: an interactive teaching aid for volumes of revolution (Matriculation Mathematics). English and Bahasa Melayu.">
+  <meta name="theme-color" content="#0b2545">
+  <title>Revolve-3D · Solids of Revolution</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b2545'/%3E%3Cellipse cx='16' cy='16' rx='10' ry='5' fill='none' stroke='%2314b8a6' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap top">
+      <a class="brand" href="#home" aria-label="Revolve-3D home">
+        <span class="logo" aria-hidden="true">R</span>
+        <span class="brand-text">
+          <strong>Revolve-3D</strong>
+          <small data-i18n="brand.sub">Solids of revolution · Matriculation Mathematics</small>
+        </span>
+      </a>
+      <div class="lang" role="group" data-i18n-aria="lang.label" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="bm" aria-pressed="false">BM</button>
+      </div>
+    </div>
+    <nav class="wrap nav" aria-label="Main">
+      <a href="#home" data-route="home" data-i18n="nav.home">Home</a>
+      <a href="#formulas" data-route="formulas" data-i18n="nav.formulas">Formulas</a>
+      <a href="#practice" data-route="practice" data-i18n="nav.practice">Practice</a>
+      <a href="#simulator" data-route="simulator" data-i18n="nav.simulator">Simulator</a>
+      <a href="#quiz" data-route="quiz" data-i18n="nav.quiz">Quiz</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap" tabindex="-1">
+    <div id="lib-error" class="banner" role="alert" hidden></div>
+
+    <!-- HOME -->
+    <section id="home" class="page" data-page>
+      <header class="hero">
+        <p class="kicker" data-i18n="home.kicker">i-Math Innovation Competition 2026</p>
+        <h1 tabindex="-1" data-i18n="home.title">See the solid. Choose the right setup.</h1>
+        <p class="lead" data-i18n="home.lead"></p>
+        <div class="cta">
+          <a class="btn" href="#practice" data-i18n="home.cta.practice">Start Practice</a>
+          <a class="btn alt" href="#simulator" data-i18n="home.cta.sim">Open Simulator</a>
+          <a class="btn alt" href="#quiz" data-i18n="home.cta.quiz">Take the Quiz</a>
+        </div>
+      </header>
+
+      <div class="grid-2">
+        <article class="card">
+          <h2 data-i18n="home.problem.h">The problem</h2>
+          <p data-i18n="home.problem.p"></p>
+        </article>
+        <article class="card">
+          <h2 data-i18n="home.purpose.h">Purpose</h2>
+          <p data-i18n="home.purpose.p"></p>
+        </article>
+      </div>
+
+      <h2 class="section-h" data-i18n="home.features.h">What it does</h2>
+      <div class="grid-3">
+        <article class="card feature">
+          <span class="badge" aria-hidden="true">1</span>
+          <h3 data-i18n="home.f1.t">See</h3>
+          <p data-i18n="home.f1.p"></p>
+        </article>
+        <article class="card feature">
+          <span class="badge" aria-hidden="true">2</span>
+          <h3 data-i18n="home.f2.t">Decide</h3>
+          <p data-i18n="home.f2.p"></p>
+        </article>
+        <article class="card feature">
+          <span class="badge" aria-hidden="true">3</span>
+          <h3 data-i18n="home.f3.t">Check</h3>
+          <p data-i18n="home.f3.p"></p>
+        </article>
+      </div>
+
+      <article class="card">
+        <h2 data-i18n="home.class.h">How to use it in class</h2>
+        <ol class="class-steps">
+          <li data-i18n="home.class.1"></li>
+          <li data-i18n="home.class.2"></li>
+          <li data-i18n="home.class.3"></li>
+          <li data-i18n="home.class.4"></li>
+        </ol>
+      </article>
+    </section>
+
+    <!-- FORMULAS -->
+    <section id="formulas" class="page" data-page hidden>
+      <h1 tabindex="-1" data-i18n="formulas.title">Formulas</h1>
+      <div id="formulas-body"></div>
+    </section>
+
+    <!-- PRACTICE -->
+    <section id="practice" class="page" data-page hidden>
+      <h1 tabindex="-1" data-i18n="pr.title">Practice: choose the setup</h1>
+      <p class="lead" data-i18n="pr.intro"></p>
+      <div class="toolbar">
+        <button id="pr-new" class="btn" type="button" data-i18n="pr.new">New problem</button>
+      </div>
+      <div class="split">
+        <article class="card" id="pr-main" aria-label="Practice"></article>
+        <aside class="side">
+          <div class="card">
+            <h2 class="mini" data-i18n="pr.regionLabel">The region</h2>
+            <canvas id="pr-2d" class="view2d" role="img" aria-label="Region"></canvas>
+          </div>
+          <div class="card placeholder" id="pr-3d-hint">
+            <p class="mut" data-i18n="pr.3dHint"></p>
+          </div>
+          <div class="card" id="pr-3d-wrap" hidden>
+            <h2 class="mini" data-i18n="pr.solidLabel">The solid</h2>
+            <canvas id="pr-3d" class="view3d" role="img" aria-label="3D solid"></canvas>
+            <p class="mut" data-i18n="sim.drag">Drag the solid to turn it.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- SIMULATOR -->
+    <section id="simulator" class="page" data-page hidden>
+      <h1 tabindex="-1" data-i18n="sim.title">Simulator</h1>
+      <p class="lead" data-i18n="sim.intro"></p>
+      <div class="split">
+        <div class="card controls">
+          <div class="row2">
+            <label><span data-i18n="sim.example">Example</span>
+              <select id="sim-pre"></select></label>
+            <label><span data-i18n="sim.axis">Revolve about</span>
+              <select id="sim-axis">
+                <option value="x" data-i18n="sim.axis.x">x-axis</option>
+                <option value="y" data-i18n="sim.axis.y">y-axis</option>
+              </select></label>
+          </div>
+          <label><span id="sim-fl">y =</span>
+            <input id="sim-f" type="text" value="x²" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+          <label><span id="sim-gl">Inner curve (optional) y =</span>
+            <input id="sim-g" type="text" placeholder="Leave empty for a disk" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+          <div class="row2">
+            <label><span data-i18n="sim.from">From</span>
+              <input id="sim-a" type="number" step="any" value="0"></label>
+            <label><span data-i18n="sim.to">To</span>
+              <input id="sim-b" type="number" step="any" value="2"></label>
+          </div>
+          <p id="sim-preview" class="eq mut"></p>
+          <p class="mut small" data-i18n="sim.symbols">Symbols</p>
+          <div id="sim-keys" class="keys"></div>
+          <p id="sim-msg" class="warn" role="alert"></p>
+        </div>
+
+        <div class="card">
+          <canvas id="sim-3d" class="view3d" role="img" aria-label="3D solid"></canvas>
+          <p class="mut" data-i18n="sim.drag">Drag the solid to turn it.</p>
+          <div class="sliders">
+            <label><span data-i18n="sim.rotation">Rotation</span> <output id="sim-ro">360°</output>
+              <input id="sim-rot" type="range" min="0" max="360" value="360"></label>
+            <label><span data-i18n="sim.slice">Slice position</span> <output id="sim-so">50%</output>
+              <input id="sim-sl" type="range" min="0" max="100" value="50"></label>
+            <label class="check"><input id="sim-ss" type="checkbox" checked>
+              <span><span data-i18n="sim.showSlice">Show the cross-section</span> (<b id="sim-st">disk</b>)</span></label>
+          </div>
+          <p id="sim-si" class="mut"></p>
+        </div>
+      </div>
+
+      <section class="card">
+        <h2 class="mini" data-i18n="sim.region">Region being revolved</h2>
+        <canvas id="sim-2d" class="view2d" role="img" aria-label="Region"></canvas>
+      </section>
+      <section class="card" id="sim-result" aria-live="polite"></section>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" class="page" data-page hidden>
+      <h1 tabindex="-1" data-i18n="quiz.title">Quiz</h1>
+      <p class="lead" data-i18n="quiz.intro"></p>
+      <div class="card parts" role="group" aria-label="Quiz parts">
+        <button class="btn alt" type="button" data-part="1" data-i18n="quiz.p1">Part 1: Formulas</button>
+        <button class="btn alt" type="button" data-part="2" data-i18n="quiz.p2">Part 2: Choose the setup</button>
+        <button class="btn alt" type="button" data-part="3" data-i18n="quiz.p3">Part 3: Volumes</button>
+      </div>
+      <section class="card" id="quiz-body" aria-live="polite"></section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap" data-i18n="footer"></div>
+  </footer>
+
+  <noscript><p class="wrap banner">Revolve-3D needs JavaScript to run.</p></noscript>
+
+  <script src="vendor/math.min.js"></script>
+  <script src="vendor/three.min.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/problems.js"></script>
+  <script src="js/viewer.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/practice.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/formulas.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -276,7 +276,7 @@
         ctx.lineTo(sx(t1), sy(v1));
         ctx.lineTo(sx(t1), sy(0));
         ctx.closePath();
-        ctx.fillStyle = midV >= 0 ? 'rgba(124, 92, 214, 0.26)' : 'rgba(225, 29, 72, 0.24)';
+        ctx.fillStyle = midV >= 0 ? 'rgba(140, 114, 137, 0.26)' : 'rgba(181, 101, 91, 0.24)';
         ctx.fill();
       }
       const nTicks = Math.max(4, Math.round(24 * (xc - lo) / (hi - lo)));
@@ -284,7 +284,7 @@
       for (let j = 1; j < nTicks; j++) {
         const ts = lo + (xc - lo) * j / nTicks;
         const vs = cl(F.fn(A, ts));
-        ctx.strokeStyle = vs >= 0 ? 'rgba(124, 92, 214, 0.32)' : 'rgba(225, 29, 72, 0.32)';
+        ctx.strokeStyle = vs >= 0 ? 'rgba(140, 114, 137, 0.32)' : 'rgba(181, 101, 91, 0.32)';
         ctx.beginPath(); ctx.moveTo(sx(ts), sy(0)); ctx.lineTo(sx(ts), sy(vs)); ctx.stroke();
       }
       ctx.strokeStyle = col('--vi');

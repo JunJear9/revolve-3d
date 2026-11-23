@@ -56,7 +56,7 @@
     path(F);
     [...G].reverse().forEach(p => x.lineTo(X(p), Y(p)));
     x.closePath();
-    x.fillStyle = 'rgba(20,184,166,.28)';
+    x.fillStyle = 'rgba(102,120,106,.28)';
     x.fill();
 
     const stroke = (pts, color) => {
@@ -70,7 +70,7 @@
 
     if (o.slice !== undefined && o.slice !== null) {
       const t0 = s.a + (s.b - s.a) * o.slice;
-      line(P(t0, s.gn(t0)), P(t0, s.fn(t0)), '#f59e0b', 4);
+      line(P(t0, s.gn(t0)), P(t0, s.fn(t0)), '#c99a5b', 4);
     }
 
     // Label the outer (R) and inner (r) boundaries at the midpoint.
@@ -179,7 +179,7 @@
       const phi = Math.max(this.opt.rot * Math.PI / 180, 0.001);
       this.pivot.add(new THREE.Mesh(
         new THREE.LatheGeometry(pts, 64, 0, phi),
-        new THREE.MeshPhongMaterial({ color: 0x14b8a6, side: THREE.DoubleSide, transparent: true, opacity: 0.8, shininess: 40 })
+        new THREE.MeshPhongMaterial({ color: 0x66786a, side: THREE.DoubleSide, transparent: true, opacity: 0.8, shininess: 40 })
       ));
 
       const maxR = Math.max(...ro, ...ri, 0.1);
@@ -192,7 +192,7 @@
         if (outer - inner < 1e-4) inner = Math.max(outer - 1e-4, 0);
         const ring = new THREE.Mesh(
           new THREE.RingGeometry(inner, Math.max(outer, 1e-3), 64),
-          new THREE.MeshBasicMaterial({ color: 0xf59e0b, side: THREE.DoubleSide })
+          new THREE.MeshBasicMaterial({ color: 0xc99a5b, side: THREE.DoubleSide })
         );
         ring.rotation.x = -Math.PI / 2;
         ring.position.y = t0 - mid;
@@ -201,7 +201,7 @@
 
       this.pivot.add(new THREE.Line(
         new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -L, 0), new THREE.Vector3(0, L, 0)]),
-        new THREE.LineBasicMaterial({ color: 0xe11d48 })
+        new THREE.LineBasicMaterial({ color: 0xb5655b })
       ));
 
       this.pivot.rotation.z = s.ax === 'x' ? -Math.PI / 2 : 0;

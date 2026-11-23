@@ -81,6 +81,35 @@
     [0, 6], [0, 6], [0, 6], [0, 1], [0, 2], [1.3, 4]
   ];
 
+  // Recipe chips and "use it on" examples for each formula (the reference format).
+  // A chip is [label, text, colour]; the colours are ac (teal), am (amber), vi (violet) and rd (rose).
+  const C = { en: 'Copy', bm: 'Salin' }, DIV = { en: 'Divide by', bm: 'Bahagi dengan' }, CH = { en: 'Change', bm: 'Tukar' };
+  const INT = { en: 'Integrate', bm: 'Kamirkan' }, ID = { en: 'Swap in identity', bm: 'Gantikan identiti' };
+  const FV = [
+    { r: [[C, 'eᵃˣ⁺ᵇ', 'ac'], [DIV, 'a', 'am']], y: ['e³ˣ', 'e⁻ˣ⁺²', 'e⁵ˣ'], n: ['x·eˣ', 'eˣ²'] },
+    { r: [[C, 'aᵐˣ⁺ⁿ', 'ac'], [DIV, 'm · ln a', 'am']], y: ['2³ˣ', '5²ˣ⁻³'], n: ['x²', '2ˣ²'] },
+    { r: [[{ en: 'Whole bottom inside', bm: 'Seluruh penyebut dalam' }, 'ln|ax + b|', 'ac'], [DIV, 'a', 'am']], y: ['1/(2x + 3)', '4/(5 − x)'], n: ['1/x²', '1/(x² − 4)'] },
+    { r: [[CH, 'sin → −cos', 'ac'], [DIV, 'a', 'am']], y: ['sin 3x', 'sin(2x + 1)'], n: ['sin x²', 'sin²x'] },
+    { r: [[CH, 'cos → sin', 'ac'], [DIV, 'a', 'am']], y: ['cos 4x', 'cos(x/2)'], n: ['cos x²', 'x cos x'] },
+    { r: [[CH, 'sec² → tan', 'ac'], [DIV, 'a', 'am']], y: ['sec² 2x', '3 sec²(x − 1)'], n: ['sec x', 'sec² x²'] },
+    { r: [[{ en: 'Rewrite product as a sum', bm: 'Tulis hasil darab sebagai hasil tambah' }, '½[sin(a+b)x + sin(a−b)x]', 'vi'],
+          [{ en: 'Integrate each sine', bm: 'Kamirkan setiap sin' }, { en: 'then divide by its number', bm: 'kemudian bahagi dengan nombornya' }, 'ac']],
+      y: ['sin 4x cos 2x', 'cos 5x cos 2x'], n: ['sin 4x + cos 2x', 'sin²x'] },
+    { r: [[ID, '(1 − cos 2ax)/2', 'vi'], [INT, 'x/2 − sin 2ax / 4a', 'ac']], y: ['sin² 3x', '4 sin² x'], n: ['sin 3x', 'sin³x'] },
+    { r: [[ID, '(1 + cos 2ax)/2', 'vi'], [INT, 'x/2 + sin 2ax / 4a', 'ac']], y: ['cos² 2x', 'cos²(x/2)'], n: ['cos 2x', 'cos⁴x'] },
+    { r: [[{ en: 'Let u =', bm: 'Biar u =' }, { en: 'the inside part', bm: 'bahagian dalam' }, 'am'],
+          [{ en: 'Swap', bm: 'Tukar' }, 'dx → du', 'vi'],
+          [INT, { en: 'in u', bm: 'dalam u' }, 'ac'],
+          [{ en: 'Put back', bm: 'Gantikan semula' }, 'x', 'rd']],
+      y: ['2x(x² + 1)³', '3x² sin x³'], n: ['x²(x² + 1)', 'sin(x²)'] },
+    { r: [[{ en: 'Pick u', bm: 'Pilih u' }, 'LoPET', 'am'], [{ en: 'Apply', bm: 'Guna' }, 'uv − ∫ v du', 'ac']],
+      y: ['x eˣ', 'x ln x', 'x sin 2x'], n: ['sin 2x', 'eˣ'] },
+    { r: [[{ en: 'Factorise', bm: 'Faktorkan' }, { en: 'the bottom', bm: 'penyebut' }, 'vi'],
+          [{ en: 'Split', bm: 'Pecahkan' }, 'A/(…) + B/(…)', 'am'],
+          [{ en: 'ln', bm: 'ln' }, { en: 'each piece', bm: 'setiap bahagian' }, 'ac']],
+      y: ['1/((x − 1)(x + 2))', '(x + 3)/(x + 5)²'], n: ['1/(2x + 1)', 'x²'] }
+  ];
+
   const sliderValue = FORMS.map(f => (f.a ? f.a[2] : null));
   // Graph state per formula: the x being shown, paused flag and direction of play.
   const graphX = FD.map(([lo, hi]) => lo + (hi - lo) * 0.45);
@@ -116,16 +145,6 @@
         h('li', {}, T('formulas.vol.b2')),
         h('li', {}, T('formulas.vol.b3'))),
       h('p', { class: 'warn-note' }, T('formulas.vol.warn')));
-  }
-
-  function checkLine(F, a) {
-    const x = 0.3, step = 1e-5;
-    const slope = (F.F(a, x + step) - F.F(a, x - step)) / (2 * step);
-    const value = F.fn(a, x);
-    const ok = Math.abs(slope - value) < 1e-4;
-    return h('p', { class: 'check mut' },
-      T('formulas.check', { sl: slope.toFixed(5), fv: value.toFixed(5) }), ' ',
-      h('span', { class: ok ? 'ok' : 'warn' }, ok ? T('formulas.match') : T('formulas.nomatch')));
   }
 
   // ---- Graph helpers (ported from the reference file) ----
@@ -254,7 +273,21 @@
     y0 -= pd;
     y1 += pd;
 
-    const pad = { l: 36, r: 12, t: 12, b: 22 };
+    // Heading numbers, as in the reference: x, the area, ΔF and the slope.
+    // On a narrow graph they go on two lines instead of running off the edge.
+    const hudA = T('fg.hudA', {
+      x: xc.toFixed(2),
+      area: simpson(t => F.fn(A, t), lo, xc, 240).toFixed(3),
+      df: (F.F(A, xc) - F.F(A, lo)).toFixed(3)
+    });
+    const e0 = 1e-4;
+    const hudB = T('fg.hudB', {
+      sl: ((F.F(A, xc + e0) - F.F(A, xc - e0)) / (2 * e0)).toFixed(2),
+      fv: F.fn(A, xc).toFixed(2)
+    });
+    ctx.font = '600 11.5px system-ui, sans-serif';
+    const oneLine = ctx.measureText(hudA + '   |   ' + hudB).width <= W - 36 - 6;
+    const pad = { l: 36, r: 12, t: oneLine ? 24 : 40, b: 22 };
     const { sx, sy, pw, ph } = drawGrid(ctx, W, H, pad, lo, hi, y0, y1, col);
 
     ctx.save();
@@ -354,6 +387,17 @@
     dot(rawFx, col('--ac'));
     dot(fxVal, col('--vi'));
     ctx.restore();
+
+    ctx.fillStyle = col('--fg');
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.font = '600 11.5px system-ui, sans-serif';
+    if (oneLine) {
+      ctx.fillText(hudA + '   |   ' + hudB, pad.l, 12);
+    } else {
+      ctx.fillText(hudA, pad.l, 11);
+      ctx.fillText(hudB, pad.l, 27);
+    }
   }
 
   // Numbers under the graph: the area against ΔF, and the slope against f(x).
@@ -443,13 +487,27 @@
     ['pointerup', 'pointercancel'].forEach(name => cv.addEventListener(name, () => { dragging = false; }));
   }
 
+  // Chips show the recipe. The "use it on" lists show examples that fit (✓) and examples that do not (✗).
+  function recipe(i) {
+    const V = FV[i];
+    const chips = [];
+    V.r.forEach((c, k) => {
+      if (k) chips.push(h('span', { class: 'ar', 'aria-hidden': 'true' }, '→'));
+      chips.push(h('div', { class: `chip c-${c[2]}` }, h('small', {}, pick(c[0])), pick(c[1])));
+    });
+    return h('div', {},
+      h('div', { class: 'rcp' }, ...chips),
+      h('div', { class: 'spot' },
+        h('b', { class: 'spot-l' }, T('formulas.use')),
+        ...V.y.map(t => h('span', { class: 'y' }, '✓ ' + t)),
+        ...V.n.map(t => h('span', { class: 'n' }, '✗ ' + t))));
+  }
+
   function formulaCard(F, i, open) {
     const kids = [
       h('summary', {}, pick(F.n)),
       h('div', { class: 'eq' }, pick(F.f)),
-      h('p', {}, h('b', {}, T('formulas.howto') + ' '), pick(F.h)),
-      h('p', {}, h('b', {}, T('formulas.why') + ' '), pick(F.y)),
-      h('p', {}, h('b', {}, T('formulas.when') + ' '), pick(F.w))
+      recipe(i)
     ];
     if (F.a) {
       kids.push(h('label', { class: 'slider' },
@@ -460,26 +518,29 @@
           oninput: e => {
             sliderValue[i] = Number(e.target.value);
             $(`fo-${i}`).textContent = String(sliderValue[i]);
-            $(`fc-${i}`).replaceChildren(checkLine(F, sliderValue[i]));
             drawGraph(i);
             updateReadout(i);
           }
         })));
     }
     kids.push(
-      h('div', { id: `fc-${i}` }, checkLine(F, aOf(i))),
-      h('div', { class: 'fgwrap' }, h('canvas', {
-        id: `fg-${i}`, class: 'fgraph', role: 'img', 'aria-label': T('fg.aria')
-      })),
       h('div', { class: 'leg' },
         h('span', {}, h('i', { class: 'sw sw-area' }), T('fg.legA')),
         h('span', {}, h('i', { class: 'sw sw-neg' }), T('fg.legN')),
         h('span', {}, h('i', { class: 'sw sw-int' }), T('fg.legF')),
         h('span', {}, h('i', { class: 'sw sw-tan' }), T('fg.legT'))),
+      h('div', { class: 'fgwrap' }, h('canvas', {
+        id: `fg-${i}`, class: 'fgraph', role: 'img', 'aria-label': T('fg.aria')
+      })),
       h('div', { class: 'fbar' },
         h('button', { type: 'button', class: 'btn alt sm', id: `fp-${i}` }, T(paused[i] ? 'fg.play' : 'fg.pause'))),
-      h('div', { class: 'graph-read', id: `fr-${i}` }),
-      h('p', { class: 'mut small' }, T('fg.note')));
+      h('p', { class: 'mut' }, h('b', {}, T('formulas.why') + ' '), T('fg.note')),
+      h('details', { class: 'words' },
+        h('summary', {}, T('formulas.words')),
+        h('p', {}, h('b', {}, T('formulas.howto') + ' '), pick(F.h)),
+        h('p', {}, h('b', {}, T('formulas.why') + ' '), pick(F.y)),
+        h('p', {}, h('b', {}, T('formulas.when') + ' '), pick(F.w))),
+      h('div', { class: 'graph-read', id: `fr-${i}` }));
     return h('details', { class: 'card formula', id: `fd-${i}`, 'data-i': i, open }, kids);
   }
 

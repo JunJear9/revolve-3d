@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Revolve-3D: an interactive teaching aid for volumes of revolution (Matriculation Mathematics). English and Bahasa Melayu.">
-  <meta name="theme-color" content="#0b2545">
+  <meta name="theme-color" content="#f3f6fb">
   <title>Revolve-3D · Solids of Revolution</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b2545'/%3E%3Cellipse cx='16' cy='16' rx='10' ry='5' fill='none' stroke='%2314b8a6' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f8f86'/%3E%3Cellipse cx='16' cy='16' rx='10' ry='5' fill='none' stroke='%2314b8a6' stroke-width='3'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -21,9 +21,12 @@
           <small data-i18n="brand.sub">Solids of revolution · Matriculation Mathematics</small>
         </span>
       </a>
-      <div class="lang" role="group" data-i18n-aria="lang.label" aria-label="Language">
-        <button type="button" data-lang="en" aria-pressed="true">EN</button>
-        <button type="button" data-lang="bm" aria-pressed="false">BM</button>
+      <div class="tools">
+        <div class="lang" role="group" data-i18n-aria="lang.label" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="bm" aria-pressed="false">BM</button>
+        </div>
+        <button id="theme-btn" class="btn alt sm" type="button" data-i18n="theme.btn" data-i18n-aria="theme.aria">Theme</button>
       </div>
     </div>
     <nav class="wrap nav" aria-label="Main">
